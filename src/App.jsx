@@ -942,9 +942,14 @@ function App() {
         {/* Child-Friendly Simple Header Actions */}
         <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
           {transactions.length > 0 && (
-            <button className="button button-outline" onClick={() => setShowSettings(true)}>
-              <Settings size={16} /> Data & Settings
-            </button>
+            <>
+              <button className="button button-outline" onClick={() => setShowSettings(true)}>
+                <Settings size={16} /> Data & Settings
+              </button>
+              <button className="button button-primary" onClick={() => setShowModal(true)}>
+                <Plus size={16} /> Add Record
+              </button>
+            </>
           )}
           
           <button className="button button-primary" style={{ padding: '0.5rem 1rem' }} onClick={() => document.getElementById('file-upload-header').click()}>
@@ -1081,6 +1086,9 @@ function App() {
                   All-time cumulative total investments, withdrawals, and remaining payouts for all users.
                 </div>
               </div>
+              <button className="button button-primary" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }} onClick={() => setShowModal(true)}>
+                <Plus size={16} /> Add Record
+              </button>
             </div>
 
             <div className="dashboardGrid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))' }}>
@@ -1641,81 +1649,80 @@ function App() {
             </div>
           )}
 
-          {/* Add Manual Transaction Modal */}
-          {showModal && (
-            <div className="modal-overlay">
-              <div className="modal-content glass-panel animate-fade-in">
-                <h3 className="sectionTitle">Add Custom Record</h3>
-                <form onSubmit={handleAddManualTransaction} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                  <div className="form-group">
-                    <label>Date</label>
-                    <input type="date" className="input" value={newTx.date} onChange={e => setNewTx({...newTx, date: e.target.value})} required />
-                  </div>
-                  <div className="form-group">
-                    <label>Amount (₹)</label>
-                    <input type="number" step="0.01" className="input" value={newTx.amount} onChange={e => setNewTx({...newTx, amount: e.target.value})} placeholder="e.g. 500" required />
-                  </div>
-                  <div className="form-group">
-                    <label>Type</label>
-                    <select className="select" value={newTx.cr_dr} onChange={e => setNewTx({...newTx, cr_dr: e.target.value})}>
-                      <option value="DR">Expense (Money Out)</option>
-                      <option value="CR">Income (Money In)</option>
-                    </select>
-                  </div>
-                  <div className="form-group">
-                    <label>Details / Name</label>
-                    <input type="text" className="input" value={newTx.details} onChange={e => setNewTx({...newTx, details: e.target.value})} placeholder="e.g. Grocery Store" required />
-                  </div>
-                  <div className="form-group">
-                    <label>Category (Type or Select)</label>
-                    <input list="category-suggestions" className="input" value={newTx.category} onChange={e => setNewTx({...newTx, category: e.target.value})} placeholder="e.g. Paid, FB Ads" />
-                  </div>
-                  <div className="form-group">
-                    <label>Custom Notes</label>
-                    <input type="text" className="input" value={newTx.customdata} onChange={e => setNewTx({...newTx, customdata: e.target.value})} placeholder="Any additional notes..." />
-                  </div>
-                  <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem', justifyContent: 'flex-end' }}>
-                    <button type="button" className="button button-outline" onClick={() => setShowModal(false)}>Cancel</button>
-                    <button type="submit" className="button">Save Record</button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          )}
-
-          {/* Add Investment / Withdrawal Modal */}
-          {showInvestModal && (
-            <div className="modal-overlay">
-              <div className="modal-content glass-panel animate-fade-in">
-                <h3 className="sectionTitle">
-                  {showInvestModal.type === 'withdrawal' ? 'Log Withdrawal for' : 'Log Investment for'} {investors.find(i => i.id === showInvestModal.investorId)?.name}
-                </h3>
-                <form onSubmit={handleAddInvestment} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                  <div className="form-group">
-                    <label>Date</label>
-                    <input type="date" className="input" value={newInvest.date} onChange={e => setNewInvest({...newInvest, date: e.target.value})} required />
-                  </div>
-                  <div className="form-group">
-                    <label>Amount (₹)</label>
-                    <input type="number" step="0.01" className="input" value={newInvest.amount} onChange={e => setNewInvest({...newInvest, amount: e.target.value})} placeholder="e.g. 1000" required />
-                  </div>
-                  <div className="form-group">
-                    <label>Details / Notes (Optional)</label>
-                    <input type="text" className="input" value={newInvest.details} onChange={e => setNewInvest({...newInvest, details: e.target.value})} placeholder={showInvestModal.type === 'withdrawal' ? 'e.g. Cash withdrawal, UPI transfer' : 'e.g. Wire Transfer, Cash, etc.'} />
-                  </div>
-                  <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem', justifyContent: 'flex-end' }}>
-                    <button type="button" className="button button-outline" onClick={() => setShowInvestModal(null)}>Cancel</button>
-                    <button type="submit" className="button button-primary" style={{ background: showInvestModal.type === 'withdrawal' ? 'var(--danger)' : 'var(--success)', border: 'none' }}>
-                      {showInvestModal.type === 'withdrawal' ? 'Add Withdrawal' : 'Add Investment'}
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          )}
-
-
         </>
+      )}
+
+      {/* Add Manual Transaction Modal */}
+      {showModal && (
+        <div className="modal-overlay">
+          <div className="modal-content glass-panel animate-fade-in">
+            <h3 className="sectionTitle">Add Custom Record</h3>
+            <form onSubmit={handleAddManualTransaction} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <div className="form-group">
+                <label>Date</label>
+                <input type="date" className="input" value={newTx.date} onChange={e => setNewTx({...newTx, date: e.target.value})} required />
+              </div>
+              <div className="form-group">
+                <label>Amount (₹)</label>
+                <input type="number" step="0.01" className="input" value={newTx.amount} onChange={e => setNewTx({...newTx, amount: e.target.value})} placeholder="e.g. 500" required />
+              </div>
+              <div className="form-group">
+                <label>Type</label>
+                <select className="select" value={newTx.cr_dr} onChange={e => setNewTx({...newTx, cr_dr: e.target.value})}>
+                  <option value="DR">Expense (Money Out)</option>
+                  <option value="CR">Income (Money In)</option>
+                </select>
+              </div>
+              <div className="form-group">
+                <label>Details / Name</label>
+                <input type="text" className="input" value={newTx.details} onChange={e => setNewTx({...newTx, details: e.target.value})} placeholder="e.g. Grocery Store" required />
+              </div>
+              <div className="form-group">
+                <label>Category (Type or Select)</label>
+                <input list="category-suggestions" className="input" value={newTx.category} onChange={e => setNewTx({...newTx, category: e.target.value})} placeholder="e.g. Paid, FB Ads" />
+              </div>
+              <div className="form-group">
+                <label>Custom Notes</label>
+                <input type="text" className="input" value={newTx.customdata} onChange={e => setNewTx({...newTx, customdata: e.target.value})} placeholder="Any additional notes..." />
+              </div>
+              <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem', justifyContent: 'flex-end' }}>
+                <button type="button" className="button button-outline" onClick={() => setShowModal(false)}>Cancel</button>
+                <button type="submit" className="button">Save Record</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Add Investment / Withdrawal Modal */}
+      {showInvestModal && (
+        <div className="modal-overlay">
+          <div className="modal-content glass-panel animate-fade-in">
+            <h3 className="sectionTitle">
+              {showInvestModal.type === 'withdrawal' ? 'Log Withdrawal for' : 'Log Investment for'} {investors.find(i => i.id === showInvestModal.investorId)?.name}
+            </h3>
+            <form onSubmit={handleAddInvestment} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <div className="form-group">
+                <label>Date</label>
+                <input type="date" className="input" value={newInvest.date} onChange={e => setNewInvest({...newInvest, date: e.target.value})} required />
+              </div>
+              <div className="form-group">
+                <label>Amount (₹)</label>
+                <input type="number" step="0.01" className="input" value={newInvest.amount} onChange={e => setNewInvest({...newInvest, amount: e.target.value})} placeholder="e.g. 1000" required />
+              </div>
+              <div className="form-group">
+                <label>Details / Notes (Optional)</label>
+                <input type="text" className="input" value={newInvest.details} onChange={e => setNewInvest({...newInvest, details: e.target.value})} placeholder={showInvestModal.type === 'withdrawal' ? 'e.g. Cash withdrawal, UPI transfer' : 'e.g. Wire Transfer, Cash, etc.'} />
+              </div>
+              <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem', justifyContent: 'flex-end' }}>
+                <button type="button" className="button button-outline" onClick={() => setShowInvestModal(null)}>Cancel</button>
+                <button type="submit" className="button button-primary" style={{ background: showInvestModal.type === 'withdrawal' ? 'var(--danger)' : 'var(--success)', border: 'none' }}>
+                  {showInvestModal.type === 'withdrawal' ? 'Add Withdrawal' : 'Add Investment'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
       )}
 
       {/* ADD FB ADS MODAL */}
