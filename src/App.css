@@ -1,0 +1,344 @@
+.appContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--text-primary);
+}
+
+.uploadContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+  border: 2px dashed var(--border-color);
+  transition: all 0.2s ease;
+  cursor: pointer;
+  margin-top: 2rem;
+}
+
+.uploadContainer:hover, .uploadContainer.dragActive {
+  border-color: var(--accent-color);
+  background: rgba(59, 130, 246, 0.05);
+}
+
+.uploadIcon {
+  color: var(--accent-color);
+  margin-bottom: 1rem;
+}
+
+.uploadTitle {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.uploadSubtitle {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+.hiddenInput {
+  display: none;
+}
+
+/* Dashboard Layout */
+.dashboardGrid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .dashboardGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Summary Cards */
+.summaryCard {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.cardAmount {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.amountSuccess { color: var(--success); }
+.amountDanger { color: var(--danger); }
+.amountNeutral { color: var(--text-primary); }
+
+/* Charts & Sections */
+.section {
+  padding: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.sectionTitle {
+  font-size: 1.125rem;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
+.chartContainer {
+  height: 300px;
+  width: 100%;
+}
+
+/* Controls */
+.controls {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.select, .input {
+  background: var(--bg-color);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 0.875rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.select:focus, .input:focus {
+  border-color: var(--accent-color);
+}
+
+.button {
+  background: var(--accent-color);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-family: inherit;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.button:hover {
+  background: var(--accent-hover);
+}
+
+.button-large {
+  padding: 1rem 1.5rem;
+  font-size: 1.125rem;
+  border-radius: 12px;
+  font-weight: 600;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.button-large:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+/* Tab Navigation */
+.tab-navigation {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  overflow-x: auto;
+  padding: 0.5rem;
+  border-radius: 12px;
+}
+
+.tab-button {
+  background: transparent;
+  color: var(--text-secondary);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-family: inherit;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.tab-button:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+}
+
+.tab-button.active {
+  background: var(--accent-color);
+  color: white;
+}
+
+/* Table */
+.tableContainer {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.table th {
+  padding: 1rem;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  font-weight: 500;
+  font-size: 0.875rem;
+}
+
+.table td {
+  padding: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  font-size: 0.875rem;
+}
+
+.table tr:last-child td {
+  border-bottom: none;
+}
+
+.table tr:hover td {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.clickable-row {
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.clickable-row:hover td {
+  background: rgba(59, 130, 246, 0.1) !important;
+}
+
+/* Home Screen Cards */
+.home-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.home-card {
+  background: var(--panel-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.home-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent-color);
+  box-shadow: 0 12px 24px rgba(0,0,0,0.2);
+}
+
+.home-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 4px;
+  background: var(--accent-color);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.home-card:hover::before {
+  opacity: 1;
+}
+
+.badge {
+  padding: 0.25rem 0.5rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.badgeSuccess {
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--success);
+}
+
+.badgeFailure {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--danger);
+}
+
+@media print {
+  .header button, 
+  .uploadContainer, 
+  .bulk-actions, 
+  .modal-overlay,
+  input[type="checkbox"],
+  .button,
+  .controls,
+  .chartContainer {
+    display: none !important;
+  }
+  
+  .appContainer {
+    padding: 0;
+    background: white;
+    color: black;
+  }
+
+  .glass-panel {
+    border: 1px solid #ccc;
+    background: transparent;
+    box-shadow: none;
+    color: black;
+  }
+
+  body {
+    background: white;
+    color: black;
+  }
+  
+  .table td, .table th, .cardHeader, .cardAmount, .sectionTitle {
+    color: black !important;
+  }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
