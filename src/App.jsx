@@ -442,6 +442,12 @@ function App() {
       return;
     }
 
+    const parsedAmount = parseFloat(newTx.amount);
+    if (isNaN(parsedAmount) || parsedAmount <= 0) {
+      alert("Please enter a valid positive amount.");
+      return;
+    }
+
     const [year, month, day] = newTx.date.split('-');
     const formattedDate = `${day}/${month}/${year}`;
     const timestamp = new Date(`${year}-${month}-${day}T00:00:00`).getTime();
@@ -456,11 +462,11 @@ function App() {
       receiver: newTx.cr_dr === 'DR' ? newTx.details : 'Self',
       reference: `MANUAL-${Date.now()}`,
       type: newTx.cr_dr === 'CR' ? 'COLLECT' : 'PAY',
-      amount: parseFloat(newTx.amount),
+      amount: parsedAmount,
       cr_dr: newTx.cr_dr,
       status: 'SUCCESS',
-      category: newTx.category,
-      customdata: newTx.customdata,
+      category: newTx.category || 'General',
+      customdata: newTx.customdata || '',
       timestamp
     };
 
@@ -468,6 +474,10 @@ function App() {
     setShowModal(false);
     setNewTx({ date: getLocalDateString(), amount: '', cr_dr: 'DR', details: '', category: 'General', customdata: '' });
     
+    // Automatically reset filter to ALL and viewState to DASHBOARD so the newly added record is IMMEDIATELY visible!
+    setFilterMonth('ALL');
+    setViewState('DASHBOARD');
+
     // Push to Supabase
     const { error: insertError } = await supabase.from('transactions').insert([manualTx]);
     if (insertError) {
@@ -1258,7 +1268,7 @@ function App() {
           {/* OVERVIEW TAB */}
           {activeTab === 'Overview' && (
             <div className="animate-fade-in">
-              <div className="dashboardGrid" style={{ gridTemplateColumns: 'repeat(3, 1fr)', marginBottom: '1.5rem' }}>
+              <div className="dashboardGrid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', marginBottom: '1.5rem' }}>
                 <div className="glass-panel summaryCard">
                   <div className="cardHeader">
                     <span>Total Income</span>
@@ -1413,7 +1423,7 @@ function App() {
                 </div>
               </div>
 
-              <div className="dashboardGrid" style={{ gridTemplateColumns: 'repeat(3, 1fr)', marginBottom: '1.5rem' }}>
+              <div className="dashboardGrid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', marginBottom: '1.5rem' }}>
                 <div className="glass-panel summaryCard" style={{ background: 'rgba(59, 130, 246, 0.05)', borderColor: 'var(--accent-color)' }}>
                   <div className="cardHeader">
                     <span>Total Paid (Incl. 18% GST)</span>
@@ -1533,7 +1543,7 @@ function App() {
                       </div>
 
                       {/* Stats Cards */}
-                      <div className="dashboardGrid" style={{ gridTemplateColumns: 'repeat(4, 1fr)', marginTop: '1.5rem' }}>
+                      <div className="dashboardGrid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', marginTop: '1.5rem' }}>
                         <div style={{ background: 'var(--panel-bg)', padding: '1.25rem', borderRadius: '12px' }}>
                           <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>Total Invested</div>
                           <div style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--success)' }}>
