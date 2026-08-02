@@ -1179,7 +1179,7 @@ function App() {
           <div className="home-grid">
             <div 
               className="home-card"
-              onClick={() => { setFilterMonth('ALL'); setActiveTab('Overview'); setViewState('DASHBOARD'); }}
+              onClick={() => { setFilterMonth('ALL'); setViewState('DASHBOARD'); }}
             >
               <div style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '1rem' }}>All Time History</div>
               <div style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>View your entire financial history combined into one dashboard.</div>
@@ -1188,7 +1188,7 @@ function App() {
               <div 
                 key={y.year} 
                 className="home-card"
-                onClick={() => { setFilterMonth(y.year); setActiveTab('Overview'); setViewState('DASHBOARD'); }}
+                onClick={() => { setFilterMonth(y.year); setViewState('DASHBOARD'); }}
               >
                 <div style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '1rem' }}>{y.year}</div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.875rem', marginBottom: '0.5rem' }}>
@@ -1217,7 +1217,7 @@ function App() {
               <div 
                 key={m.month} 
                 className="home-card"
-                onClick={() => { setFilterMonth(m.month); setActiveTab('Overview'); setViewState('DASHBOARD'); }}
+                onClick={() => { setFilterMonth(m.month); setViewState('DASHBOARD'); }}
               >
                 <div style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '1rem' }}>{m.month}</div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.875rem', marginBottom: '0.5rem' }}>
@@ -1240,33 +1240,11 @@ function App() {
         </div>
       ) : (
         <>
-          {/* Dashboard Control Bar */}
+          {/* Progressive Disclosure: Filters */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', gap: '1rem', flexWrap: 'wrap' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
-              <button className="button button-outline" onClick={() => setViewState('HOME')} style={{ padding: '0.5rem 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 600 }}>
-                <ArrowLeft size={18} /> Back to Menu
-              </button>
-
-              {/* Active Timeframe Selector */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--panel-bg)', padding: '0.25rem 0.75rem', borderRadius: '10px', border: '1px solid var(--border-color)' }}>
-                <Calendar size={16} color="var(--accent-color)" />
-                <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Timeframe:</span>
-                <select 
-                  className="select" 
-                  value={filterMonth} 
-                  onChange={(e) => setFilterMonth(e.target.value)}
-                  style={{ padding: '0.25rem 0.5rem', border: 'none', background: 'transparent', fontWeight: 600, color: 'var(--accent-color)', cursor: 'pointer' }}
-                >
-                  <option value="ALL">All Time</option>
-                  <optgroup label="By Year">
-                    {availableYears.map(y => <option key={y} value={y}>{y}</option>)}
-                  </optgroup>
-                  <optgroup label="By Month">
-                    {availableMonths.map(m => <option key={m} value={m}>{m}</option>)}
-                  </optgroup>
-                </select>
-              </div>
-            </div>
+            <button className="button button-outline" onClick={() => setViewState('HOME')} style={{ padding: '0.5rem 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 600 }}>
+              <ArrowLeft size={18} /> Back to Menu
+            </button>
             <div style={{ display: 'flex', gap: '0.75rem' }}>
               <button className="button button-outline" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }} onClick={() => setShowFilters(!showFilters)}>
                 <Filter size={16} /> Filter Data
@@ -1454,21 +1432,20 @@ function App() {
 
           {/* FB ADS TAB */}
           {activeTab === 'FB Ads' && (() => {
-            const displayFbAds = filteredFbAds;
-            const baseFbAds = displayFbAds.reduce((sum, item) => sum + item.baseamount, 0);
-            const fbAdsTotalPaid = baseFbAds * 1.18;
-            const gstPaid = fbAdsTotalPaid - baseFbAds;
+            const allBaseFbAds = manualFbAdsList.reduce((sum, item) => sum + item.baseamount, 0);
+            const allFbAdsTotal = allBaseFbAds * 1.18;
+            const allGst = allFbAdsTotal - allBaseFbAds;
             return (
             <div className="animate-fade-in">
               <div className="glass-panel" style={{ padding: '1.5rem', marginBottom: '1.5rem', background: 'var(--panel-bg)', border: '1px solid var(--border-color)' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
                   <h3 className="sectionTitle" style={{ marginBottom: 0, color: 'var(--text-primary)' }}>FB Ads Spend</h3>
                   <button className="button button-primary" onClick={() => setShowFbAdsModal(true)}>
                     <Plus size={16} /> Add FB Ad Spend
                   </button>
                 </div>
-                <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
-                  Filtered to: <strong style={{ color: 'var(--accent-color)' }}>{filterMonth === 'ALL' ? 'All Time' : filterMonth}</strong>
+                <div style={{ marginTop: '0.75rem', fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
+                  FB Ads are deducted from the Net Balance based on the selected timeframe filter. This page shows all records.
                 </div>
               </div>
 
@@ -1479,7 +1456,7 @@ function App() {
                     <PieChart size={20} color="var(--accent-color)" />
                   </div>
                   <div className="cardAmount" style={{ color: 'var(--accent-color)' }}>
-                    ₹{fbAdsTotalPaid.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    ₹{allFbAdsTotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </div>
                 </div>
                 
@@ -1489,7 +1466,7 @@ function App() {
                     <Activity size={20} color="var(--success)" />
                   </div>
                   <div className="cardAmount amountSuccess">
-                    ₹{baseFbAds.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    ₹{allBaseFbAds.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </div>
                 </div>
 
@@ -1499,16 +1476,19 @@ function App() {
                     <ArrowUpCircle size={20} color="var(--danger)" />
                   </div>
                   <div className="cardAmount amountDanger">
-                    ₹{gstPaid.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    ₹{allGst.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </div>
                 </div>
+              </div>
+              <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginTop: '-0.5rem', marginBottom: '1.5rem', textAlign: 'center' }}>
+                The total paid amount is automatically deducted from the business Net Balance before profit distribution.
               </div>
 
               <div className="glass-panel section" style={{ paddingBottom: '1.5rem' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
                   <h3 className="sectionTitle" style={{ marginBottom: 0 }}>Ad Expense Records</h3>
                   <span className="badge badgeSuccess" style={{ background: 'var(--bg-color)', color: 'var(--text-secondary)' }}>
-                    {displayFbAds.length} records found ({filterMonth === 'ALL' ? 'All Time' : filterMonth})
+                    {manualFbAdsList.length} records found
                   </span>
                 </div>
                 <div className="tableContainer">
@@ -1524,9 +1504,7 @@ function App() {
                       </tr>
                     </thead>
                     <tbody>
-                      {displayFbAds.length === 0 ? (
-                        <tr><td colSpan={6} style={{ textAlign: 'center', color: 'var(--text-secondary)', padding: '2rem' }}>No FB Ad records found for {filterMonth === 'ALL' ? 'All Time' : filterMonth}.</td></tr>
-                      ) : displayFbAds.map(item => (
+                      {manualFbAdsList.map(item => (
                         <FbAdRow 
                           key={item.id} 
                           item={item} 
