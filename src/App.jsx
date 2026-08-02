@@ -277,8 +277,35 @@ function App() {
   const [showFbAdsModal, setShowFbAdsModal] = useState(false);  
   const getLocalDateString = () => {
     const d = new Date();
-    d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
-    return d.toISOString().split('T')[0];
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
+  const handleOpenAddRecord = () => {
+    let defaultDate = getLocalDateString();
+    if (filterMonth && filterMonth !== 'ALL') {
+      if (filterMonth.match(/^\d{4}$/)) {
+        defaultDate = `${filterMonth}-01-01`;
+      } else {
+        const d = new Date(`1 ${filterMonth}`);
+        if (!isNaN(d.getTime())) {
+          const y = d.getFullYear();
+          const m = String(d.getMonth() + 1).padStart(2, '0');
+          defaultDate = `${y}-${m}-01`;
+        }
+      }
+    }
+    setNewTx({
+      date: defaultDate,
+      amount: '',
+      cr_dr: 'DR',
+      details: '',
+      category: 'General',
+      customdata: ''
+    });
+    setShowModal(true);
   };
 
   const [newTx, setNewTx] = useState({
@@ -949,18 +976,17 @@ function App() {
           SpendAnalytics
         </div>
         
-        {/* Child-Friendly Simple Header Actions */}
+        {/* Header Action Buttons */}
         <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
           {transactions.length > 0 && (
-            <>
-              <button className="button button-outline" onClick={() => setShowSettings(true)}>
-                <Settings size={16} /> Data & Settings
-              </button>
-              <button className="button button-primary" onClick={() => setShowModal(true)}>
-                <Plus size={16} /> Add Record
-              </button>
-            </>
+            <button className="button button-outline" onClick={() => setShowSettings(true)}>
+              <Settings size={16} /> Data & Settings
+            </button>
           )}
+          
+          <button className="button button-primary" onClick={handleOpenAddRecord} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <Plus size={16} /> Add Record
+          </button>
           
           <button className="button button-primary" style={{ padding: '0.5rem 1rem' }} onClick={() => document.getElementById('file-upload-header').click()}>
             <UploadCloud size={16} /> Add PDF
@@ -1096,7 +1122,7 @@ function App() {
                   All-time cumulative total investments, withdrawals, and remaining payouts for all users.
                 </div>
               </div>
-              <button className="button button-primary" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }} onClick={() => setShowModal(true)}>
+              <button className="button button-primary" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }} onClick={handleOpenAddRecord}>
                 <Plus size={16} /> Add Record
               </button>
             </div>
@@ -1223,7 +1249,7 @@ function App() {
               <button className="button button-outline" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }} onClick={() => setShowFilters(!showFilters)}>
                 <Filter size={16} /> Filter Data
               </button>
-              <button className="button button-primary" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }} onClick={() => setShowModal(true)}>
+              <button className="button button-primary" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }} onClick={handleOpenAddRecord}>
                 <Plus size={16} /> Add Record
               </button>
             </div>
