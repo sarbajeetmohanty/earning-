@@ -717,7 +717,7 @@ function App() {
     const totalFbAdsPaid = filteredFbAds.reduce((sum, item) => sum + (item.baseamount * 1.18), 0);
     expense += totalFbAdsPaid;
 
-    return { income, expense, balance: income - expense, fbAdsPaid: totalFbAdsPaid };
+    return { income, expense, balance: income - expense };
   }, [filteredTransactions, filteredFbAds]);
 
   const chartData = useMemo(() => {
@@ -949,24 +949,16 @@ function App() {
           </tr>
         </thead>
         <tbody>
-          {list.length === 0 ? (
-            <tr>
-              <td colSpan={8} style={{ textAlign: 'center', color: 'var(--text-secondary)', padding: '2.5rem' }}>
-                No bank transaction records found for {filterMonth === 'ALL' ? 'All Time' : filterMonth}.
-              </td>
-            </tr>
-          ) : (
-            list.map((t) => (
-              <TransactionRow 
-                key={t.id} 
-                t={t} 
-                isSelected={selectedIds.has(t.id)}
-                onSelect={handleSelect}
-                onDelete={handleDelete} 
-                onUpdate={handleUpdateTransaction} 
-              />
-            ))
-          )}
+          {list.map((t) => (
+            <TransactionRow 
+              key={t.id} 
+              t={t} 
+              isSelected={selectedIds.has(t.id)}
+              onSelect={handleSelect}
+              onDelete={handleDelete} 
+              onUpdate={handleUpdateTransaction} 
+            />
+          ))}
         </tbody>
       </table>
     </div>
@@ -1339,11 +1331,6 @@ function App() {
                     <ArrowUpCircle size={20} color="var(--danger)" />
                   </div>
                   <div className="cardAmount amountDanger">₹{summary.expense.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</div>
-                  {summary.fbAdsPaid > 0 && (
-                    <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '0.25rem' }}>
-                      (Includes ₹{summary.fbAdsPaid.toLocaleString('en-IN', { minimumFractionDigits: 2 })} FB Ads spend)
-                    </div>
-                  )}
                 </div>
 
                 <div className="glass-panel summaryCard">
